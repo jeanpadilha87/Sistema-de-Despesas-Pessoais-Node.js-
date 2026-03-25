@@ -1,23 +1,80 @@
+// Classe paragerenciar as despesas
 class Expense {
+
+    // Construtor: inicializa o array e o contador de ID
     constructor() {
-        this.expenses = [];
+        this.expenses = [];      // Array que armazena todas as despesas
+        this.idCounter = 1;      // Contador automático para gerar IDs
     }
 
-    create({ title, amount, category, date, description }) {
+    // Retorna todas as despesas cadastradas
+    getAll() {
+        return this.expenses;
+    }
+
+    // Busca uma despesa pelo ID
+    getById(id) {
+        return this.expenses.find(e => e.id === id);
+    }
+
+    // Cria uma nova despesa
+    create(title, amount, category, date, description) {
+
+        // Cria o objeto da despesa
         const newExpense = {
-            id: "exp_" + Date.now(),
+            id: this.idCounter++, // Incrementa automaticamente o ID
             title,
             amount,
             category,
             date,
-            description,
-            createdAt: new Date()
+            description
         };
 
+        // Adiciona no array
         this.expenses.push(newExpense);
 
+        // Retorna a despesa criada
         return newExpense;
+    }
+
+    // Atualiza uma despesa existente
+    update(id, title, amount, category, date, description) {
+
+        // Procura o índice da despesa
+        const index = this.expenses.findIndex(e => e.id === id);
+
+        // Se não encontrar, retorna null
+        if (index === -1) {
+            return null;
+        }
+
+        // Atualiza os dados mantendo o que já existia
+        this.expenses[index] = {
+            ...this.expenses[index],
+            title,
+            amount,
+            category,
+            date,
+            description
+        };
+
+        // Retorna a despesa atualizada
+        return this.expenses[index];
+    }
+
+    // Remove uma despesa pelo ID
+    delete(id) {
+
+        const index = this.expenses.findIndex(e => e.id === id);
+
+        if (index === -1) {
+            return null;
+        }
+
+        // Remove do array
+        this.expenses.splice(index, 1);
     }
 }
 
+// Exporta a classe para uso em outros arquivos
 module.exports = new Expense();
