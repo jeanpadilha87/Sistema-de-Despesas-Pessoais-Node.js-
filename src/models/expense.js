@@ -37,6 +37,26 @@ class Expense {
         return newExpense;
     }
 
+    //total geral
+    getTotal() {
+        return this.expenses.reduce((total, expense) => total + expense.amount, 0);
+    }
+
+    //totais por categoria
+    getTotalByCategory() {
+        return this.expenses.reduce((totals, expense) => {
+            const category = expense.category;
+
+            if (!totals[category]) {
+                totals[category] = 0;
+            }
+
+            totals[category] += expense.amount;
+
+            return totals;
+        }, {});
+    }
+
     // Atualiza uma despesa existente
     update(id, title, amount, category, date, description) {
 
