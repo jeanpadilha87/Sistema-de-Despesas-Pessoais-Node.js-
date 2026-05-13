@@ -1,92 +1,209 @@
+// Importa o model Expense
 const Expense = require("../models/expense");
+
+// Importa a View
 const ExpenseView = require("../view/expenseView");
 
-// LISTAR DESPESAS (GET)
-function getAllExpenses(req, res) {
+// CONTROLLER ALTERADO PARA USAR SEQUELIZE
 
-    // Retorna todas as despesas
-    const expenses = Expense.getAll();
+// LISTAR TODAS AS DESPESAS (GET)
+async function getAllExpenses(req, res) {
 
-    ExpenseView.showExpenses(res, expenses);
+    try {
+
+        // Busca todas as despesas no banco
+        const expenses = await Expense.findAll();
+
+        ExpenseView.showExpenses(res, expenses);
+
+    } catch (err) {
+
+        res.status(500).json({
+            error: "Erro ao buscar despesas"
+        });
+
+    }
 }
 
-//total geral
-function getSummaryTotal(req, res) {
+// TOTAL GERAL
+async function getSummaryTotal(req, res) {
 
-    const total = Expense.getTotal();
+    try {
 
-    ExpenseView.showSummaryTotal(res, total);
+        // Busca todas as despesas
+        const expenses = await Expense.findAll();
+
+        // Soma todos os valores
+        const total = expenses.reduce(
+            (sum, expense) => sum + expense.amount,
+            0
+        );
+
+        ExpenseView.showSummaryTotal(res, total);
+
+    } catch (err) {
+
+        res.status(500).json({
+            error: "Erro ao calcular total"
+        });
+
+    }
 }
 
-//totais por categoria
-function getSummaryByCategory(req, res) {
+// TOTAL POR CATEGORIA
+async function getSummaryByCategory(req, res) {
 
-    const totalsByCategory = Expense.getTotalByCategory();
+    try {
 
-    ExpenseView.showSummaryByCategory(res, totalsByCategory);
+        const expenses = await Expense.findAll();
+
+        const totalsByCategory = {};
+
+        expenses.forEach((expense) => {
+
+            if (!totalsByCategory[expense.category]) {
+                totalsByCategory[expense.category] = 0;
+            }
+
+            totalsByCategory[expense.category] += expense.amount;
+
+        });
+
+        ExpenseView.showSummaryByCategory(res, totalsByCategory);
+
+    } catch (err) {
+
+        res.status(500).json({
+            error: "Erro ao calcular categorias"
+        });
+
+    }
 }
 
 // BUSCAR POR ID (GET)
-function getExpenseById(req, res) {
+async function getExpenseById(req, res) {
 
-    // Converte o ID para número
-    const id = Number(req.params.id);
+    try {
 
-    // Busca no model
-    const expense = Expense.getById(id);
+        const id = Number(req.params.id);
 
-    ExpenseView.showExpense(res, expense);
+        // Busca pela chave primária
+        const expense = await Expense.findByPk(id);
+
+        ExpenseView.showExpense(res, expense);
+
+    } catch (err) {
+
+        res.status(500).json({
+            error: "Erro ao buscar despesa"
+        });
+
+    }
 }
 
 // CRIAR DESPESA (POST)
-function createExpense(req, res) {
+async function createExpense(req, res) {
 
-    // Recebe os dados do body
-    const { title, amount, category, date, description } = req.body;
+    try {
 
-    // Cria a despesa
-    const expense = Expense.create(
-        title,
-        amount,
-        category,
-        date,
-        description
-    );
+        const { title, amount, category, date, description } = req.body;
 
-    ExpenseView.showCreated(res, expense);
+        // Cria a despesa no banco
+        const expense = await Expense.create({
+            title,
+            amount,
+            category,
+            date,
+            description
+        });
+
+        ExpenseView.showCreated(res, expense);
+
+    } catch (err) {
+
+        res.status(500).json({
+            error: "Erro ao criar despesa"
+        });
+
+    }
 }
 
-// ATUALIZAR (PUT)
-function updateExpense(req, res) {
+// ATUALIZAR DESPESA (PUT)
+async function updateExpense(req, res) {
 
-    const id = Number(req.params.id);
+    try {
 
-    const { title, amount, category, date, description } = req.body;
+        const id = Number(req.params.id);
 
-    // Atualiza a despesa
-    const expense = Expense.update(
-        id,
-        title,
-        amount,
-        category,
-        date,
-        description
-    );
+        const { title, amount, category, date, description } = req.body;
 
-    ExpenseView.showUpdated(res, expense);
+        // Busca a despesa
+        const expense = await Expense.findByPk(id);
+
+        // Verifica se existe
+        if (!expense) {
+
+            return res.status(404).json({
+                error: "Despesa não encontrada"
+            });
+
+        }
+
+        // Atualiza os dados
+        expense.title = title;
+        expense.amount = amount;
+        expense.category = category;
+        expense.date = date;
+        expense.description = description;
+
+        // Salva no banco
+        await expense.save();
+
+        ExpenseView.showUpdated(res, expense);
+
+    } catch (err) {
+
+        res.status(500).json({
+            error: "Erro ao atualizar despesa"
+        });
+
+    }
 }
 
-// DELETAR (DELETE)
-function deleteExpense(req, res) {
+// DELETAR DESPESA (DELETE)
+async function deleteExpense(req, res) {
 
-    const id = Number(req.params.id);
+    try {
 
-    // Remove a despesa
-    Expense.delete(id);
+        const id = Number(req.params.id);
 
-    ExpenseView.showDeleted(res);
+        // Busca a despesa
+        const expense = await Expense.findByPk(id);
+
+        // Verifica se existe
+        if (!expense) {
+
+            return res.status(404).json({
+                error: "Despesa não encontrada"
+            });
+
+        }
+
+        // Remove do banco
+        await expense.destroy();
+
+        ExpenseView.showDeleted(res);
+
+    } catch (err) {
+
+        res.status(500).json({
+            error: "Erro ao deletar despesa"
+        });
+
+    }
 }
 
+// Exporta os métodos
 module.exports = {
     getAllExpenses,
     getSummaryTotal,

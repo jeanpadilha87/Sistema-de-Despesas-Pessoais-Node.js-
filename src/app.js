@@ -1,3 +1,17 @@
+require("./config/database");
+
+// Importa o model Expense
+const Expense = require("./models/expense");
+
+// Cria a tabela automaticamente no banco
+Expense.sync()
+    .then(() => {
+        console.log("Tabela de despesas criada com sucesso!");
+    })
+    .catch((err) => {
+        console.error("Erro ao criar tabela:", err);
+    });
+
 const express = require("express");
 const expenseRoutes = require("./routes/expenseRoutes");
 
