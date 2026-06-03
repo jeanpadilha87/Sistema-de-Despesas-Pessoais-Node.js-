@@ -1,23 +1,35 @@
 require("./config/database");
 
-// Importa o model Expense
+// Importa os models
 const Expense = require("./models/expense");
+const User = require("./models/user");
 
-// Cria a tabela automaticamente no banco
+// Importa as rotas
+const expenseRoutes = require("./routes/expenseRoutes");
+const userRoutes = require("./routes/userRoutes");
+
+const express = require("express");
+const app = express();
+
+// Cria a tabela de despesas automaticamente no banco
 Expense.sync()
     .then(() => {
         console.log("Tabela de despesas criada com sucesso!");
     })
     .catch((err) => {
-        console.error("Erro ao criar tabela:", err);
+        console.error("Erro ao criar tabela de despesas:", err);
     });
 
-const express = require("express");
-const expenseRoutes = require("./routes/expenseRoutes");
+// Cria a tabela de usuários automaticamente no banco
+User.sync()
+    .then(() => {
+        console.log("Tabela de usuários criada com sucesso!");
+    })
+    .catch((err) => {
+        console.error("Erro ao criar tabela de usuários:", err);
+    });
 
-const app = express();
-
-// receber JSON no body das requisições
+// Receber JSON no body das requisições
 app.use(express.json());
 
 // ROTA TESTE
@@ -27,6 +39,9 @@ app.get("/", (req, res) => {
 
 // Usa as rotas de despesas
 app.use("/", expenseRoutes);
+
+// Usa as rotas de usuários
+app.use("/", userRoutes);
 
 // Inicia o servidor
 app.listen(3000, () => {

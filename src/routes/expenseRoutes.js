@@ -1,10 +1,15 @@
+const authMiddleware = require("../middleware/auth");
 const express = require("express");
 const expenseController = require("../controllers/expenseController");
 
 const router = express.Router();
 
 // LISTAR DESPESAS (GET)
-router.get("/expenses", expenseController.getAllExpenses);
+router.get(
+    "/expenses",
+    authMiddleware,
+    expenseController.getAllExpenses
+);
 
 //totais gerais
 router.get("/expenses/summary/total", expenseController.getSummaryTotal);
