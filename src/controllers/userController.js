@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 const authConfig = require("../config/auth");
 
 // Importa o model User
@@ -11,16 +12,24 @@ async function createUser(req, res) {
 
         const { email, password, name, role } = req.body;
 
+        // Gera o hash da senha
+        const hashedPassword = await bcrypt.hash(password, 10);
+
         const user = await User.create({
             email,
-            password,
+            password: hashedPassword,
             name,
             role
         });
 
+        // Remove a senha da resposta
+        const userResponse = user.toJSON();
+
+        delete userResponse.password;
+
         res.status(201).json({
             message: "Usuário criado com sucesso",
-            user
+            user: userResponse
         });
 
     } catch (err) {
@@ -49,29 +58,40 @@ async function login(req, res) {
             });
         }
 
-        if (user.password !== password) {
+        // Compara a senha informada com o hash salvo
+        const passwordMatch = await bcrypt.compare(
+            password,
+            user.password
+        );
+
+        if (!passwordMatch) {
             return res.status(401).json({
                 error: "Senha inválida"
             });
         }
 
-const token = jwt.sign(
-    {
-        id: user.id,
-        email: user.email,
-        role: user.role
-    },
-    authConfig.jwt.secret,
-    {
-        expiresIn: authConfig.jwt.expiresIn
-    }
-);
+        const token = jwt.sign(
+            {
+                id: user.id,
+                email: user.email,
+                role: user.role
+            },
+            authConfig.jwt.secret,
+            {
+                expiresIn: authConfig.jwt.expiresIn
+            }
+        );
 
-res.status(200).json({
-    message: "Login realizado com sucesso",
-    token,
-    user
-});
+        // Remove a senha da resposta
+        const userResponse = user.toJSON();
+
+        delete userResponse.password;
+
+        res.status(200).json({
+            message: "Login realizado com sucesso",
+            token,
+            user: userResponse
+        });
 
     } catch (err) {
 
