@@ -61,11 +61,11 @@ async function getSummaryByCategory(req, res) {
 
         expenses.forEach((expense) => {
 
-            if (!totalsByCategory[expense.category]) {
-                totalsByCategory[expense.category] = 0;
+            if (!totalsByCategory[expense.categoryId]) {
+                totalsByCategory[expense.categoryId] = 0;
             }
 
-            totalsByCategory[expense.category] += expense.amount;
+            totalsByCategory[expense.categoryId] += expense.amount;
 
         });
 
@@ -106,22 +106,31 @@ async function createExpense(req, res) {
 
     try {
 
-        const { title, amount, category, date, description } = req.body;
+        const {
+            description,
+            amount,
+            date,
+            status,
+            categoryId,
+            userId
+        } = req.body;
 
         // Cria a despesa no banco
         const expense = await Expense.create({
-            title,
+            description,
             amount,
-            category,
             date,
-            description
+            status,
+            categoryId,
+            userId
         });
 
         ExpenseView.showCreated(res, expense);
 
     } catch (err) {
-
+        
         res.status(500).json({
+        
             error: "Erro ao criar despesa"
         });
 
@@ -135,7 +144,14 @@ async function updateExpense(req, res) {
 
         const id = Number(req.params.id);
 
-        const { title, amount, category, date, description } = req.body;
+        const {
+            description,
+            amount,
+            date,
+            status,
+            categoryId,
+            userId
+        } = req.body;
 
         // Busca a despesa
         const expense = await Expense.findByPk(id);
@@ -150,11 +166,12 @@ async function updateExpense(req, res) {
         }
 
         // Atualiza os dados
-        expense.title = title;
-        expense.amount = amount;
-        expense.category = category;
-        expense.date = date;
         expense.description = description;
+        expense.amount = amount;
+        expense.date = date;
+        expense.status = status;
+        expense.categoryId = categoryId;
+        expense.userId = userId;
 
         // Salva no banco
         await expense.save();

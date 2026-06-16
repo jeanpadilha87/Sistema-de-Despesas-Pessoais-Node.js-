@@ -4,9 +4,7 @@ const express = require("express");
 const app = express();
 
 // Importa os models
-const Expense = require("./models/expense");
-const User = require("./models/user");
-const Category = require("./models/category");
+const { Expense, User, Category } = require("./models");
 
 // Importa as rotas
 const expenseRoutes = require("./routes/expenseRoutes");

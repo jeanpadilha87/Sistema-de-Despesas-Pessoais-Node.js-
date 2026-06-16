@@ -4,7 +4,7 @@ const sequelize = require("../config/database");
 // Importa os tipos de dados do Sequelize
 const { DataTypes } = require("sequelize");
 
-// Alterado para usar Sequelize
+// Model de despesas
 
 const Expense = sequelize.define("expenses", {
 
@@ -15,8 +15,8 @@ const Expense = sequelize.define("expenses", {
         primaryKey: true
     },
 
-    // Título da despesa
-    title: {
+    // Descrição da despesa
+    description: {
         type: DataTypes.STRING,
         allowNull: false
     },
@@ -27,22 +27,29 @@ const Expense = sequelize.define("expenses", {
         allowNull: false
     },
 
-    // Categoria da despesa
-    category: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-
     // Data da despesa
     date: {
-        type: DataTypes.STRING,
+        type: DataTypes.DATEONLY,
         allowNull: false
     },
 
-    // Descrição da despesa
-    description: {
-        type: DataTypes.STRING,
-        allowNull: true
+    // Status da despesa
+    status: {
+        type: DataTypes.ENUM("PENDENTE", "PAGA"),
+        allowNull: false,
+        defaultValue: "PENDENTE"
+    },
+
+    // Chave estrangeira para categoria
+    categoryId: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+
+    // Chave estrangeira para usuário
+    userId: {
+        type: DataTypes.INTEGER,
+        allowNull: false
     }
 
 });

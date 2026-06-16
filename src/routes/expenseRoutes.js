@@ -1,8 +1,8 @@
-const authMiddleware = require("../middleware/auth");
 const express = require("express");
-const expenseController = require("../controllers/expenseController");
-
 const router = express.Router();
+
+const authMiddleware = require("../middleware/auth");
+const expenseController = require("../controllers/expenseController");
 
 // LISTAR DESPESAS (GET)
 router.get(
@@ -11,22 +11,46 @@ router.get(
     expenseController.getAllExpenses
 );
 
-//totais gerais
-router.get("/expenses/summary/total", expenseController.getSummaryTotal);
+// TOTAL GERAL
+router.get(
+    "/expenses/summary/total",
+    authMiddleware,
+    expenseController.getSummaryTotal
+);
 
-//totais por categoria
-router.get("/expenses/summary/category", expenseController.getSummaryByCategory);
+// TOTAL POR CATEGORIA
+router.get(
+    "/expenses/summary/category",
+    authMiddleware,
+    expenseController.getSummaryByCategory
+);
 
 // BUSCAR POR ID (GET)
-router.get("/expenses/:id", expenseController.getExpenseById);
+router.get(
+    "/expenses/:id",
+    authMiddleware,
+    expenseController.getExpenseById
+);
 
 // CRIAR DESPESA (POST)
-router.post("/expenses", expenseController.createExpense);
+router.post(
+    "/expenses",
+    authMiddleware,
+    expenseController.createExpense
+);
 
-// ATUALIZAR (PUT)
-router.put("/expenses/:id", expenseController.updateExpense);
+// ATUALIZAR DESPESA (PUT)
+router.put(
+    "/expenses/:id",
+    authMiddleware,
+    expenseController.updateExpense
+);
 
-// DELETAR (DELETE)
-router.delete("/expenses/:id", expenseController.deleteExpense);
+// DELETAR DESPESA (DELETE)
+router.delete(
+    "/expenses/:id",
+    authMiddleware,
+    expenseController.deleteExpense
+);
 
 module.exports = router;
