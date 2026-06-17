@@ -14,31 +14,23 @@ const categoryRoutes = require("./routes/categoryRoutes");
 // Receber JSON no body das requisições
 app.use(express.json());
 
-// Cria a tabela de despesas automaticamente no banco
-Expense.sync()
+// Sincroniza as tabelas do banco de dados
+Promise.all([
+    Expense.sync(),
+    User.sync(),
+    Category.sync()
+])
     .then(() => {
+
         console.log("Tabela de despesas criada com sucesso!");
-    })
-    .catch((err) => {
-        console.error("Erro ao criar tabela de despesas:", err);
-    });
-
-// Cria a tabela de usuários automaticamente no banco
-User.sync()
-    .then(() => {
         console.log("Tabela de usuários criada com sucesso!");
-    })
-    .catch((err) => {
-        console.error("Erro ao criar tabela de usuários:", err);
-    });
-
-// Cria a tabela de categorias automaticamente no banco
-Category.sync()
-    .then(() => {
         console.log("Tabela de categorias criada com sucesso!");
+
     })
     .catch((err) => {
-        console.error("Erro ao criar tabela de categorias:", err);
+
+        console.error("Erro ao sincronizar tabelas:", err);
+
     });
 
 // Rota de teste
@@ -54,6 +46,17 @@ app.use("/", userRoutes);
 
 // Usa as rotas de categorias
 app.use("/", categoryRoutes);
+
+// Middleware global de tratamento de erros
+app.use((err, req, res, next) => {
+
+    console.error(err);
+
+    res.status(err.status || 500).json({
+        error: err.message || "Erro interno do servidor"
+    });
+
+});
 
 // Inicia o servidor
 app.listen(3000, () => {
