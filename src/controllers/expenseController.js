@@ -89,12 +89,35 @@ async function getSummaryTotal(req, res) {
             0
         );
 
-        ExpenseView.showSummaryTotal(res, total);
+        res.status(200).json({
+            total
+        });
 
     } catch (err) {
 
         res.status(500).json({
             error: "Erro ao calcular total"
+        });
+
+    }
+}
+
+// QUANTIDADE DE DESPESAS
+async function getExpensesCount(req, res) {
+
+    try {
+
+        // Conta todas as despesas
+        const quantidade = await Expense.count();
+
+        res.status(200).json({
+            quantidade
+        });
+
+    } catch (err) {
+
+        res.status(500).json({
+            error: "Erro ao contar despesas"
         });
 
     }
@@ -119,7 +142,12 @@ async function getSummaryByCategory(req, res) {
 
         });
 
-        ExpenseView.showSummaryByCategory(res, totalsByCategory);
+        const result = Object.keys(totalsByCategory).map((categoryId) => ({
+            categoria: categoryId,
+            total: totalsByCategory[categoryId]
+        }));
+
+        res.status(200).json(result);
 
     } catch (err) {
 
@@ -180,7 +208,6 @@ async function createExpense(req, res) {
     } catch (err) {
 
         res.status(500).json({
-
             error: "Erro ao criar despesa"
         });
 
@@ -274,6 +301,7 @@ async function deleteExpense(req, res) {
 module.exports = {
     getAllExpenses,
     getSummaryTotal,
+    getExpensesCount,
     getSummaryByCategory,
     getExpenseById,
     createExpense,

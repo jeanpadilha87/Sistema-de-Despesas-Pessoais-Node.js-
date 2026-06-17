@@ -11,16 +11,23 @@ router.get(
     expenseController.getAllExpenses
 );
 
-// TOTAL GERAL
+// DASHBOARD - TOTAL DE GASTOS
 router.get(
-    "/expenses/summary/total",
+    "/dashboard/total-expenses",
     authMiddleware,
     expenseController.getSummaryTotal
 );
 
-// TOTAL POR CATEGORIA
+// DASHBOARD - QUANTIDADE DE DESPESAS
 router.get(
-    "/expenses/summary/category",
+    "/dashboard/expenses-count",
+    authMiddleware,
+    expenseController.getExpensesCount
+);
+
+// DASHBOARD - GASTOS POR CATEGORIA
+router.get(
+    "/dashboard/expenses-by-category",
     authMiddleware,
     expenseController.getSummaryByCategory
 );
