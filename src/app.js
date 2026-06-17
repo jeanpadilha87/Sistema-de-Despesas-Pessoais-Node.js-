@@ -1,6 +1,9 @@
 require("./config/database");
 
 const express = require("express");
+const swaggerUi = require("swagger-ui-express");
+const swaggerSpec = require("./config/swagger");
+
 const app = express();
 
 // Importa os models
@@ -37,6 +40,13 @@ Promise.all([
 app.get("/", (req, res) => {
     res.send("API rodando!");
 });
+
+// Documentação Swagger
+app.use(
+    "/api-docs",
+    swaggerUi.serve,
+    swaggerUi.setup(swaggerSpec)
+);
 
 // Usa as rotas de despesas
 app.use("/", expenseRoutes);
