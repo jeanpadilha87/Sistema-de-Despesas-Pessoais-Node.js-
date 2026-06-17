@@ -1,6 +1,9 @@
 // Importa o model Expense
 const Expense = require("../models/expense");
 
+// Importa operadores do Sequelize
+const { Op } = require("sequelize");
+
 // Importa a View
 const ExpenseView = require("../view/expenseView");
 
@@ -11,8 +14,55 @@ async function getAllExpenses(req, res) {
 
     try {
 
+        const {
+            status,
+            categoryId,
+            startDate,
+            endDate,
+            minAmount,
+            maxAmount
+        } = req.query;
+
+        const where = {};
+
+        // Filtro por status
+        if (status) {
+            where.status = status;
+        }
+
+        // Filtro por categoria
+        if (categoryId) {
+            where.categoryId = Number(categoryId);
+        }
+
+        // Filtro por período
+        if (startDate && endDate) {
+
+            where.date = {
+                [Op.between]: [startDate, endDate]
+            };
+
+        }
+
+        // Filtro por valor mínimo e máximo
+        if (minAmount || maxAmount) {
+
+            where.amount = {};
+
+            if (minAmount) {
+                where.amount[Op.gte] = Number(minAmount);
+            }
+
+            if (maxAmount) {
+                where.amount[Op.lte] = Number(maxAmount);
+            }
+
+        }
+
         // Busca todas as despesas no banco
-        const expenses = await Expense.findAll();
+        const expenses = await Expense.findAll({
+            where
+        });
 
         ExpenseView.showExpenses(res, expenses);
 
@@ -128,9 +178,9 @@ async function createExpense(req, res) {
         ExpenseView.showCreated(res, expense);
 
     } catch (err) {
-        
+
         res.status(500).json({
-        
+
             error: "Erro ao criar despesa"
         });
 
