@@ -1,0 +1,422 @@
+{
+  "info": {
+    "_postman_id": "a2c6dc90-23d7-4555-a52e-c3510edbb222",
+    "name": "Sistema de Despesas Pessoais",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "14967345",
+    "_collection_link": "https://go.postman.co/collection/14967345-a2c6dc90-23d7-4555-a52e-c3510edbb222?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Cadastrar Usuário",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"name\": \"Jean\",\r\n    \"email\": \"jean@email.com\",\r\n    \"password\": \"123456\",\r\n    \"role\": \"admin\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/users",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "users"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Login",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"email\":\"jean@email.com\",\r\n    \"password\":\"123456\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/users/login",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "users",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Listar Categorias",
+      "request": {
+        "auth": {
+          "type": "bearer"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/categories",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "categories"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Criar Categoria",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"name\":\"Saúde\",\r\n    \"description\":\"Plano de Saúde\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/categories",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "categories"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Listar Despesas",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/expenses",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "expenses"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Buscar Despesa",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/expenses/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "expenses",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Criar Despesa",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJqZWFuQGVtYWlsLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MjY4MjU5OSwiZXhwIjoxNzgyNzY4OTk5fQ.HFo2AHYJYN3H-C4LthJobpnufKrVgAjrX-CGZEO57-4",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"description\":\"Farmácia\",\r\n    \"amount\":120.50,\r\n    \"date\":\"2026-06-28\",\r\n    \"status\":\"PAGA\",\r\n    \"categoryId\":1,\r\n    \"userId\":1\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/expenses",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "expenses"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Atualizar Despesa",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"description\":\"Farmácia Atualizada\",\r\n    \"amount\":150,\r\n    \"date\":\"2026-06-28\",\r\n    \"status\":\"PAGA\",\r\n    \"categoryId\":1,\r\n    \"userId\":1\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/expenses/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "expenses",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Excluir Despesa",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/expenses/2",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "expenses",
+            "2"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Dashboard Total",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/dashboard/total-expenses",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "dashboard",
+            "total-expenses"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Dashboard Quantidade",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/dashboard/expenses-count",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "dashboard",
+            "expenses-count"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Dashboard Categoria",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/dashboard/expenses-by-category",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "dashboard",
+            "expenses-by-category"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Filtro Status",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/expenses?status=PAGA",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "expenses"
+          ],
+          "query": [
+            {
+              "key": "status",
+              "value": "PAGA"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Filtro Categoria",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/expenses?categoryId=1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "expenses"
+          ],
+          "query": [
+            {
+              "key": "categoryId",
+              "value": "1"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Filtro Valor",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/expenses?minAmount=100&maxAmount=500",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "expenses"
+          ],
+          "query": [
+            {
+              "key": "minAmount",
+              "value": "100"
+            },
+            {
+              "key": "maxAmount",
+              "value": "500"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Filtro Período",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/expenses?startDate=2026-06-01&endDate=2026-06-30",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "expenses"
+          ],
+          "query": [
+            {
+              "key": "startDate",
+              "value": "2026-06-01"
+            },
+            {
+              "key": "endDate",
+              "value": "2026-06-30"
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJqZWFuQGVtYWlsLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MjY4MjU5OSwiZXhwIjoxNzgyNzY4OTk5fQ.HFo2AHYJYN3H-C4LthJobpnufKrVgAjrX-CGZEO57-4",
+        "type": "string"
+      }
+    ]
+  }
+}

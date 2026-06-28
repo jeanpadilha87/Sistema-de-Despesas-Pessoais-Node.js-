@@ -18,23 +18,32 @@ const categoryRoutes = require("./routes/categoryRoutes");
 app.use(express.json());
 
 // Sincroniza as tabelas do banco de dados
-Promise.all([
-    Expense.sync(),
-    User.sync(),
-    Category.sync()
-])
-    .then(() => {
+async function syncDatabase() {
 
-        console.log("Tabela de despesas criada com sucesso!");
+    try {
+
+        // Cria primeiro a tabela de usuários
+        await User.sync();
         console.log("Tabela de usuários criada com sucesso!");
+
+        // Cria depois a tabela de categorias
+        await Category.sync();
         console.log("Tabela de categorias criada com sucesso!");
 
-    })
-    .catch((err) => {
+        // Por último cria a tabela de despesas
+        // pois ela depende de usuários e categorias
+        await Expense.sync();
+        console.log("Tabela de despesas criada com sucesso!");
+
+    } catch (err) {
 
         console.error("Erro ao sincronizar tabelas:", err);
 
-    });
+    }
+
+}
+
+syncDatabase();
 
 // Rota de teste
 app.get("/", (req, res) => {
