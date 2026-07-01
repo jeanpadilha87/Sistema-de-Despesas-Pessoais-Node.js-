@@ -3,6 +3,7 @@ require("./config/database");
 const express = require("express");
 const swaggerUi = require("swagger-ui-express");
 const swaggerSpec = require("./config/swagger");
+const cors = require("cors");
 
 const app = express();
 
@@ -16,6 +17,7 @@ const categoryRoutes = require("./routes/categoryRoutes");
 
 // Receber JSON no body das requisições
 app.use(express.json());
+app.use(cors());
 
 // Sincroniza as tabelas do banco de dados
 async function syncDatabase() {
