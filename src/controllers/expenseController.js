@@ -61,9 +61,15 @@ async function getAllExpenses(req, res) {
 
         // Busca todas as despesas no banco
         const expenses = await Expense.findAll({
-            where
-        });
+    where
+});
 
+console.log("========== DESPESAS ==========");
+console.log(JSON.stringify(expenses, null, 2));
+console.log("==============================");
+
+ExpenseView.showExpenses(res, expenses);
+        console.log(expenses);
         ExpenseView.showExpenses(res, expenses);
 
     } catch (err) {
