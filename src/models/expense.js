@@ -4,6 +4,9 @@ const sequelize = require("../config/database");
 // Importa os tipos de dados do Sequelize
 const { DataTypes } = require("sequelize");
 
+// Importa o model de categorias
+const Category = require("./category");
+
 // Model de despesas
 
 const Expense = sequelize.define("expenses", {
@@ -52,6 +55,11 @@ const Expense = sequelize.define("expenses", {
         allowNull: false
     }
 
+});
+
+// Relacionamento: uma despesa pertence a uma categoria.
+Expense.belongsTo(Category, {
+    foreignKey: "categoryId"
 });
 
 // Exporta o model

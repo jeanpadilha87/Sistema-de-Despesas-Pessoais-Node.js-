@@ -1,5 +1,8 @@
 // Importa o model Expense
 const Expense = require("../models/expense");
+// Importa o model Category
+const Category = require("../models/category");
+
 
 // Importa operadores do Sequelize
 const { Op } = require("sequelize");
@@ -61,21 +64,29 @@ async function getAllExpenses(req, res) {
 
         // Busca todas as despesas no banco
         const expenses = await Expense.findAll({
-    where
+
+    where,
+
+    include: [
+
+        {
+
+            model: Category,
+
+            attributes: ["id", "name"]
+
+        }
+
+    ]
+
 });
 
-console.log("========== DESPESAS ==========");
-console.log(JSON.stringify(expenses, null, 2));
-console.log("==============================");
-
 ExpenseView.showExpenses(res, expenses);
-        console.log(expenses);
-        ExpenseView.showExpenses(res, expenses);
 
     } catch (err) {
-
+        console.error(err);
         res.status(500).json({
-            error: "Erro ao buscar despesas"
+            error: err.message
         });
 
     }
@@ -134,24 +145,45 @@ async function getSummaryByCategory(req, res) {
 
     try {
 
-        const expenses = await Expense.findAll();
+        const expenses = await Expense.findAll({
+
+    include: [
+
+        {
+
+            model: Category,
+
+            attributes: ["name"]
+
+        }
+
+    ]
+
+});
 
         const totalsByCategory = {};
 
         expenses.forEach((expense) => {
 
-            if (!totalsByCategory[expense.categoryId]) {
-                totalsByCategory[expense.categoryId] = 0;
-            }
+        const nomeCategoria = expense.category.name;
 
-            totalsByCategory[expense.categoryId] += expense.amount;
+       if (!totalsByCategory[nomeCategoria]) {
+
+       totalsByCategory[nomeCategoria] = 0;
+
+}
+
+totalsByCategory[nomeCategoria] += expense.amount;
 
         });
 
-        const result = Object.keys(totalsByCategory).map((categoryId) => ({
-            categoria: categoryId,
-            total: totalsByCategory[categoryId]
-        }));
+        const result = Object.keys(totalsByCategory).map((nomeCategoria) => ({
+
+        categoria: nomeCategoria,
+
+        total: totalsByCategory[nomeCategoria]
+
+}));
 
         res.status(200).json(result);
 
